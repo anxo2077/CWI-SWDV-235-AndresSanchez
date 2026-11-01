@@ -2,6 +2,8 @@ package edu.cwi;
 
 import io.javalin.Javalin;
 import io.javalin.http.staticfiles.Location;
+
+import static io.javalin.apibuilder.ApiBuilder.*;
 /**
  * Hello world!
  *
@@ -20,6 +22,13 @@ public class Main
             config.routes.get("/logout", ctx -> {
                 ctx.redirect("/");
             });
+
+            config.routes.apiBuilder(() -> {
+                path("/transactions", () -> {
+                    crud("/{id}", new TransactionsController());
+                });
+				
+			});
         }
             
         ).start(7070);
