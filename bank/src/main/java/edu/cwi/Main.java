@@ -1,14 +1,13 @@
 package edu.cwi;
 
 import io.javalin.Javalin;
+import io.javalin.http.UnauthorizedResponse;
 import io.javalin.http.staticfiles.Location;
 import io.javalin.rendering.template.JavalinJte;
+import java.util.Map;
 
 import static io.javalin.apibuilder.ApiBuilder.*;
-/**
- * Hello world!
- *
- */
+
 public class Main 
 {
     public static void main( String[] args )
@@ -18,22 +17,36 @@ public class Main
 
             config.staticFiles.add("/public", Location.CLASSPATH);
 
-            config.routes.post("/account", ctx -> {
-                ctx.redirect("/account.html");
-            });
+            config.routes.beforeMatched(ctx -> {
+                if (ctx.routeRoles().isEmpty()) {
+                    return; 
+                }
 
-            config.routes.get("/logout", ctx -> {
-                ctx.redirect("/");
+                Object role = ctx.cookieStore().get("user-role");
+
+                if (role == null || !ctx.routeRoles().contains(AppRole.valueOf(role.toString()))) {
+                    throw new UnauthorizedResponse();
+                }
             });
 
             config.routes.apiBuilder(() -> {
+
+                post("/login", AuthController::authenticate);
+                get("/logout", AuthController::logout);
+
+                get("/account", ctx -> {
+                    String id = ctx.cookieStore().get("user-id");
+                    UserAccount account = AuthController.getUser(id).get();
+
+                    ctx.render("jte/accountPage.jte", Map.of("title", "My Account", "account", account));
+                }, AppRole.CUSTOMER);
+
                 path("/transactions", () -> {
                     crud("/{id}", new TransactionsController());
                 });
-				
-			});
+            });
         }
-            
+
         ).start(7070);
     }
 }
