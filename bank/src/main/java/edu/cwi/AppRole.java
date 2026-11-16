@@ -2,6 +2,6 @@ package edu.cwi;
 
 import io.javalin.security.RouteRole;
 
-public enum AppRole implements RouteRole { 
-    CUSTOMER 
+public enum AppRole implements RouteRole {
+    CUSTOMER, TELLER, ADMIN
 }
