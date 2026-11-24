@@ -34,12 +34,8 @@ public class Main
                 post("/login", AuthController::authenticate);
                 get("/logout", AuthController::logout);
 
-                get("/account", ctx -> {
-                    Integer userId = ctx.cookieStore().get("user-id");
-                    UserAccount account = new UsersController().getUserAccount(userId);
-
-                    ctx.render("jte/accountPage.jte", Map.of("title", "My Account", "account", account));
-                }, AppRole.CUSTOMER);
+                get("/accounts", AccountsController::getAll, AppRole.CUSTOMER);
+                get("/account/{id}", AccountsController::getOne, AppRole.CUSTOMER);
 
                 path("/transactions", () -> {
                     crud("/{id}", new TransactionsController());

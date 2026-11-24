@@ -2,6 +2,7 @@ package edu.cwi.data;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.text.DecimalFormat;
 
 public class Transaction {
     private long id;
@@ -31,4 +32,9 @@ public class Transaction {
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+    public String formatAmount() {
+        DecimalFormat decimalFormat = new DecimalFormat("$#,###.00");
+        return decimalFormat.format(this.amount);
+    }
 }

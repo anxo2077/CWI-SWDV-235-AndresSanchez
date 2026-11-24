@@ -1,6 +1,7 @@
 package edu.cwi.data;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 
 public class Account {
     private int id;
@@ -8,8 +9,7 @@ public class Account {
     private String accountType = "CHECKING";
     private BigDecimal balance;
 
-    public Account() {
-    }
+    public Account() {}
 
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
@@ -22,4 +22,9 @@ public class Account {
 
     public BigDecimal getBalance() { return balance; }
     public void setBalance(BigDecimal balance) { this.balance = balance; }
+
+    public String formatBalance() {
+        DecimalFormat decimalFormat = new DecimalFormat("$#,###.00");
+        return decimalFormat.format(this.balance);
+    }
 }
