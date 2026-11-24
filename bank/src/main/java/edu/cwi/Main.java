@@ -37,6 +37,10 @@ public class Main
                 get("/accounts", AccountsController::getAll, AppRole.CUSTOMER);
                 get("/account/{id}", AccountsController::getOne, AppRole.CUSTOMER);
 
+                path("/transaction", () -> {
+                    crud("/{id}", new TransactionController(), AppRole.CUSTOMER);
+                });
+
                 path("/transactions", () -> {
                     crud("/{id}", new TransactionsController());
                 });
